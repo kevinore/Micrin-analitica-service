@@ -19,7 +19,6 @@ client = MongoClient("mongodb+srv://%s:%s@analitica-pqz6j.mongodb.net/test?retry
 db = client.Micrin_analitica
 
 def connexToDB(plato):
-    
     analitica = db.analitica.find({'nombre_plato':plato})
     uni = db.analitica.find({'nombre_plato':plato})
 
@@ -48,7 +47,7 @@ def connexToDB(plato):
     X = np.reshape(Xnum,(-1,1))
     Y = np.reshape(Ynum,(-1,1))
 
-    X_train,X_test,Y_train,Y_test=train_test_split(X,Y, test_size=0.3)
+    X_train,X_test,Y_train,Y_test=train_test_split(X,Y, test_size=0.10)
     lr=linear_model.LinearRegression()
     lr.fit(X_train,Y_train)
 
@@ -58,12 +57,14 @@ def connexToDB(plato):
     b = lr.intercept_[0]
     lr.score(X_train, Y_train)
     y = round(a*118+b)
-    return y
+    return {"plato":plato,"cantidad_plato":y, "precision":lr.score(X_train, Y_train)*100}
 
 def adddate(listnumDB, db, plato):
-    for i in range(1, 118):
+    for i in range(1, 117):
         if not any(d['cod_fecha'] == str(i) for d in listnumDB):
-            new_row={'nombre_plato':'Pollo', 'unidades':'0', 'cod_fecha':str(i), 'fecha':'none'}
+            #print(plato)
+            new_row={'nombre_plato':'xxxxxxx', 'unidades':'0', 'cod_fecha':str(i), 'fecha':'none'}
+            #print(new_row)
             db.analitica.insert_one(new_row)
 
 @app.route('/', methods=['GET'])
@@ -78,13 +79,12 @@ def analitica():
     for i in range(0, len(analitica)):
         if analitica[i]['nombre_plato'] not in nombre_plato:
             nombre_plato.append(analitica[i]['nombre_plato'])
-            print(analitica[i]['nombre_plato'])
 
     for i in range(0,10):
-        probabilidad.append({'nombre_plato':nombre_plato[i],'cantidad':connexToDB(nombre_plato[i])})
+        probabilidad.append(connexToDB(nombre_plato[i]))
 
     return jsonify(probabilidad)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port=8000)
