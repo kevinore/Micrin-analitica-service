@@ -21,7 +21,7 @@ Flask-WTF==0.14.3
 idna==2.9
 itsdangerous==1.1.0
 jdcal==1.4.1
-Jinja2==2.11.1
+Jinja2==2.11.3
 joblib==0.14.1
 jwcrypto==0.7
 kiwisolver==1.2.0
