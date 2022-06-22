@@ -31,7 +31,7 @@ MarkupSafe==1.1.1
 matplotlib==3.2.1
 mercadopago==1.1.1
 MongoAlchemy==0.19
-numpy==1.18.4
+numpy==1.22.0
 openpyxl==3.0.3
 pandas==1.0.3
 pybase64==1.0.1
